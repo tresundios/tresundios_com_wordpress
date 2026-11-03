@@ -904,6 +904,10 @@ class Tresundios_Importer {
 			$parts = array();
 			$faq   = isset( $p['faq'] ) ? $this->filled_faq( $p['faq'], $slug ) : array();
 			foreach ( $p['sections'] as $section ) {
+				// The DentalPin India strip belongs to the global site only; .in presents the product on its own pages.
+				if ( 'products-strip' === $section && $this->india ) {
+					continue;
+				}
 				if ( 'faq' === $section ) {
 					$parts[] = $this->faq_section( $faq, 'Frequently asked questions' );
 				} elseif ( 'map' === $section ) {
