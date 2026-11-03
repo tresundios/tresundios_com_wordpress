@@ -592,3 +592,39 @@ ul.stats{list-style:none;padding-left:0;margin-bottom:0}
 .step h3,.step p{color:var(--g-3)} /* inactive steps: 7:1 on ink (was 2.96:1); active step stays white */
 .step.is-active h3{color:var(--white)}.step.is-active p{color:var(--g-2)}
 .tr-nav [aria-current="page"],.tr-nav [aria-current="page"] .wp-block-navigation-item__label{color:var(--red-deep)}
+
+/* ---------- Case study: DentalPin India (body, diagram, CTA) + products strip ---------- */
+.case-body>.lede{font-size:clamp(18px,1.8vw,22px);color:var(--ink-3);max-width:60ch}
+.case-body .case-results{margin-block:1.4em}
+.case-note{font-size:14px;color:var(--g-4);margin-top:2em}
+.prose .case-note{font-size:14px;color:var(--g-4)}
+.arch{margin:1.6em 0;padding:clamp(20px,3vw,32px);border-radius:var(--r);background:var(--white);border:1px solid var(--g-1);display:grid;gap:10px}
+.arch p{margin:0}
+.arch-user{justify-self:center;text-align:center}
+.arch-user span{display:inline-block;padding:8px 18px;border-radius:999px;background:var(--ink);color:var(--white);font:500 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+.arch-user::after{content:"↓";display:block;margin-top:6px;color:var(--red-deep);font-weight:700;line-height:1}
+.arch-host,.arch-docker{border:1.5px dashed var(--g-3);border-radius:18px;padding:14px}
+.arch-docker{margin-top:10px;border-color:var(--red);background:var(--paper)}
+.arch-label{font:500 11px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--g-4)}
+.arch .arch-flow{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:26px}
+.arch .arch-flow li{position:relative;margin:0;padding:12px 16px;border-radius:14px;background:var(--white);border:1px solid var(--g-2);display:flex;flex-direction:column;gap:2px;font-size:14px}
+.arch .arch-flow b{font-family:var(--f-display);font-size:18px;letter-spacing:-.02em;color:var(--ink)}
+.arch .arch-flow span{font-size:13px;color:var(--g-4)}
+.arch .arch-flow li+li::before{content:"↓";position:absolute;left:50%;top:-22px;transform:translateX(-50%);color:var(--red-deep);font-weight:700;line-height:1}
+.arch-note{text-align:center;font:500 12px var(--f-mono);letter-spacing:.06em;color:var(--g-4)}
+.arch-note::before{content:"↻ "}
+@media (min-width:768px){.arch .arch-flow{grid-template-columns:repeat(3,1fr);gap:34px}.arch .arch-flow li+li::before{content:"→";left:-24px;top:50%;transform:translateY(-50%)}}
+.case-cta{margin-top:2.4em;padding:clamp(28px,4vw,48px);border-radius:var(--r);background:var(--ink)}
+.case-cta h2{margin-top:0;max-width:22ch;color:var(--white)}
+.prose .case-cta p{color:var(--g-2)}
+.prose .case-cta a:not(.wp-block-button__link){color:var(--white);text-underline-offset:3px}
+.prose .case-cta a:not(.wp-block-button__link):hover{color:var(--red-bright)}
+.products-strip .product-card{position:relative}
+.products-strip .product-card p.mini-title{margin:0 0 10px;font-size:11px}
+.products-strip .product-card h3 a{color:inherit;text-decoration:none}
+.products-strip .product-card h3 a::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.products-strip .product-card h3 a:focus-visible{outline:none}
+.products-strip .product-card:has(h3 a:focus-visible){outline:2px solid var(--red);outline-offset:3px}
+.products-strip .product-card .product-note{font-size:13px;margin-top:12px}
+.products-strip .product-card .view-link{color:var(--ink)}
+.products-strip .product-card:hover .view-link i{transform:translateX(5px)}

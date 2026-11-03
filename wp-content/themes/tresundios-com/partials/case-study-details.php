@@ -48,9 +48,15 @@ if ( ! $data ) {
 			<div class="meta"><span class="cat"><?php echo esc_html( $data['industry'] ); ?></span></div>
 			<h1><?php echo esc_html( $data['title'] ); ?></h1>
 			<div class="row g-3 mt-1">
-				<div class="col-6 col-sm-4"><div class="fact"><small><?php esc_html_e( 'Client', 'tresundios' ); ?></small><b><?php echo esc_html( $data['client'] ); ?></b></div></div>
-				<div class="col-6 col-sm-4"><div class="fact"><small><?php esc_html_e( 'Duration', 'tresundios' ); ?></small><b><?php echo esc_html( $data['duration'] ); ?></b></div></div>
-				<div class="col-12 col-sm-4"><div class="fact"><small><?php esc_html_e( 'Market', 'tresundios' ); ?></small><b><?php echo esc_html( $data['location'] ); ?></b></div></div>
+				<?php if ( $data['client'] ) : ?>
+					<div class="col-6 col-sm-4"><div class="fact"><small><?php esc_html_e( 'Client', 'tresundios' ); ?></small><b><?php echo esc_html( $data['client'] ); ?></b></div></div>
+				<?php endif; ?>
+				<?php if ( $data['duration'] ) : ?>
+					<div class="col-6 col-sm-4"><div class="fact"><small><?php esc_html_e( 'Duration', 'tresundios' ); ?></small><b><?php echo esc_html( $data['duration'] ); ?></b></div></div>
+				<?php endif; ?>
+				<?php if ( $data['location'] ) : ?>
+					<div class="col-12 col-sm-4"><div class="fact"><small><?php esc_html_e( 'Market', 'tresundios' ); ?></small><b><?php echo esc_html( $data['location'] ); ?></b></div></div>
+				<?php endif; ?>
 			</div>
 			<?php if ( $data['tech'] ) : ?>
 				<ul class="stack list-unstyled" aria-label="<?php esc_attr_e( 'Technology', 'tresundios' ); ?>">
@@ -62,10 +68,16 @@ if ( ! $data ) {
 		</div>
 	</div>
 
-	<div class="row g-3">
-		<section class="col-md-6"><div class="case-block"><h2 class="h3-like"><?php esc_html_e( 'The challenge', 'tresundios' ); ?></h2><p><?php echo esc_html( $data['challenge'] ); ?></p></div></section>
-		<section class="col-md-6"><div class="case-block"><h2 class="h3-like"><?php esc_html_e( 'What we built', 'tresundios' ); ?></h2><p><?php echo esc_html( $data['solution'] ); ?></p></div></section>
-	</div>
+	<?php if ( $data['challenge'] || $data['solution'] ) : ?>
+		<div class="row g-3">
+			<?php if ( $data['challenge'] ) : ?>
+				<section class="col-md-6"><div class="case-block"><h2 class="h3-like"><?php esc_html_e( 'The challenge', 'tresundios' ); ?></h2><p><?php echo esc_html( $data['challenge'] ); ?></p></div></section>
+			<?php endif; ?>
+			<?php if ( $data['solution'] ) : ?>
+				<section class="col-md-6"><div class="case-block"><h2 class="h3-like"><?php esc_html_e( 'What we built', 'tresundios' ); ?></h2><p><?php echo esc_html( $data['solution'] ); ?></p></div></section>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
 
 	<?php if ( $data['results'] ) : ?>
 		<section aria-labelledby="results-title">
@@ -78,6 +90,8 @@ if ( ! $data ) {
 		</section>
 	<?php endif; ?>
 
+	<?php // Case studies with their own body (post content) carry their own call to action, so the generic footer is skipped. ?>
+	<?php if ( '' === trim( (string) get_post_field( 'post_content', $data['id'] ) ) ) : ?>
 	<div class="case-foot">
 		<div class="d-flex flex-wrap gap-2">
 			<?php if ( $data['live_url'] ) : ?>
@@ -87,4 +101,5 @@ if ( ! $data ) {
 		</div>
 		<a class="btn-tr btn-tr-primary magnetic" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><span><?php esc_html_e( 'Start a project like this', 'tresundios' ); ?></span><i class="arrow" aria-hidden="true">→</i></a>
 	</div>
+	<?php endif; ?>
 </article>

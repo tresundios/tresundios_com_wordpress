@@ -123,7 +123,50 @@ function tresundios_schema_org() {
 			$org['sameAs'][] = $url;
 		}
 	}
+	// The global site links to its India sibling even when TRESUNDIOS_COUNTERPART_URL is not defined.
+	if ( ! tresundios_is_india() ) {
+		$org['sameAs'][] = 'https://tresundios.in/';
+	}
+	$org['sameAs'] = array_values( array_unique( array_filter( $org['sameAs'] ) ) );
+
+	// DentalPin is licensed to Tresundios for India only; it is named here as a brand, never as an offer.
+	if ( ! tresundios_is_india() ) {
+		$org['brand'] = apply_filters(
+			'tresundios_schema_brand',
+			array(
+				'@type' => 'Brand',
+				'name'  => 'DentalPin India',
+				'url'   => 'https://dentalpin.in',
+			)
+		);
+	}
 	return $org;
+}
+
+/**
+ * What a case study is about: the client, or the product for our own DentalPin India case study.
+ *
+ * @param WP_Post             $post Case study.
+ * @param array<string,mixed> $c    Shaped case study.
+ * @return array<string, mixed>|null
+ */
+function tresundios_case_study_about( $post, $c ) {
+	$about = $c['client'] ? array(
+		'@type' => 'Organization',
+		'name'  => $c['client'],
+	) : null;
+	if ( 'dentalpin-india' === $post->post_name ) {
+		// No Offer or price here: outside India DentalPin is a case study, not something we sell.
+		$about = array(
+			'@type'               => 'SoftwareApplication',
+			'name'                => 'DentalPin India',
+			'url'                 => 'https://dentalpin.in',
+			'description'         => 'Dental practice software for Indian clinics with an AI assistant, GST billing, WhatsApp reminders and seven Indian languages.',
+			'applicationCategory' => 'BusinessApplication',
+			'areaServed'          => 'IN',
+		);
+	}
+	return apply_filters( 'tresundios_case_study_about', $about, $post, $c );
 }
 
 /**
@@ -250,10 +293,12 @@ function tresundios_schema_entities() {
 					'url'              => $url,
 					'image'            => $thumb ? $thumb : null,
 					'creator'          => array( '@id' => tresundios_org_id() ),
-					'about'            => $c['client'] ? array(
-						'@type' => 'Organization',
-						'name'  => $c['client'],
-					) : null,
+					'author'           => array( '@id' => tresundios_org_id() ),
+					'publisher'        => array( '@id' => tresundios_org_id() ),
+					'datePublished'    => get_post_time( 'c', true, $post ),
+					'dateModified'     => get_post_modified_time( 'c', true, $post ),
+					'inLanguage'       => tresundios_get( 'hreflang' ),
+					'about'            => tresundios_case_study_about( $post, $c ),
 					'genre'            => $c['industry'],
 					'keywords'         => implode( ', ', $c['tech'] ),
 					'locationCreated'  => array(

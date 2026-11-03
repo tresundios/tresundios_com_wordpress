@@ -27,6 +27,7 @@ require TRESUNDIOS_CORE_DIR . '/includes/seo/redirects.php';
 
 if ( is_admin() ) {
 	require TRESUNDIOS_CORE_DIR . '/includes/admin/settings-page.php';
+	require TRESUNDIOS_CORE_DIR . '/includes/admin/dentalpin-case-study-tool.php';
 }
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {

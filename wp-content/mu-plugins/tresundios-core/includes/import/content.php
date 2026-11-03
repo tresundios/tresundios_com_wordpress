@@ -354,7 +354,7 @@ return array(
 		'about'          => array(
 			'title'    => 'About Tresundios',
 			'lede'     => 'Tresundios Software Products and Services Private Limited is a DPIIT-recognised startup, incorporated in Chennai on 18 November 2024, building marketing, design, events and technology for small and medium businesses.',
-			'sections' => array( 'about', 'testimonial', 'trust', 'cta-book-call' ),
+			'sections' => array( 'about', 'products-strip', 'testimonial', 'trust', 'cta-book-call' ),
 		),
 		'contact'        => array(
 			'title'    => 'Contact',
