@@ -1,0 +1,17 @@
+# Secrets and environment config
+wp-config.php
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Runtime files
+*.log
+debug.log
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+node_modules/
