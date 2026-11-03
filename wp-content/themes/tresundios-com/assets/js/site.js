@@ -10,6 +10,11 @@
 
 	/* ---------- Header: mobile menu, scrolled state, hide on scroll down, progress bar ---------- */
 	var nav = $( '.site-nav' ), toggler = $( '.navbar-toggler' ), bar = $( '#progress' ), giant = $( '#giant' );
+	/* The header gets transform / backdrop-filter, which turns it into the containing block for fixed children,
+	   so the progress bar and cursor would slide away with it. Keep them directly under <body>. */
+	[ $( '.progress-bar-top' ), $( '.cursor' ) ].forEach( function ( el ) {
+		if ( el && el.parentNode !== document.body ) document.body.appendChild( el );
+	} );
 	if ( toggler ) {
 		toggler.addEventListener( 'click', function () {
 			var open = nav.classList.toggle( 'is-open' );
@@ -77,13 +82,33 @@
 				ringEl.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
 				if ( Math.abs( mx - rx ) + Math.abs( my - ry ) > 0.5 ) requestAnimationFrame( follow ); else moving = false;
 			};
+			var hoverSel = 'a, button, .proj, .svc, input, select, textarea, summary, .orbit-wrap';
+			var seen = false, hoverTick = false;
 			window.addEventListener( 'pointermove', function ( e ) {
 				mx = e.clientX; my = e.clientY;
 				dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+				if ( ! seen ) {
+					// Snap the ring to the real pointer position on the first move instead of gliding from the corner.
+					seen = true; rx = mx; ry = my;
+					ringEl.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
+					cur.classList.add( 'is-live' );
+				}
 				if ( ! moving ) { moving = true; requestAnimationFrame( follow ); }
 			}, { passive: true } );
 			document.addEventListener( 'pointerover', function ( e ) {
-				cur.classList.toggle( 'is-hover', !! e.target.closest( 'a, button, .proj, .svc, input, select, textarea, summary, .orbit-wrap' ) );
+				cur.classList.toggle( 'is-hover', !! e.target.closest( hoverSel ) );
+			} );
+			document.documentElement.addEventListener( 'pointerleave', function () { cur.classList.remove( 'is-live', 'is-down' ); } );
+			document.documentElement.addEventListener( 'pointerenter', function () { if ( seen ) cur.classList.add( 'is-live' ); } );
+			// Scrolling moves content under a still pointer and browsers don't fire pointerover then, so re-check the hover state.
+			document.addEventListener( 'tr:scroll', function () {
+				if ( ! seen || hoverTick ) return;
+				hoverTick = true;
+				requestAnimationFrame( function () {
+					hoverTick = false;
+					var t = document.elementFromPoint( mx, my );
+					cur.classList.toggle( 'is-hover', !! ( t && t.closest( hoverSel ) ) );
+				} );
 			} );
 			document.addEventListener( 'pointerdown', function () { cur.classList.add( 'is-down' ); } );
 			document.addEventListener( 'pointerup', function () { cur.classList.remove( 'is-down' ); } );
@@ -184,14 +209,26 @@
 		dialog.showModal();
 	} );
 
-	/* ---------- Map facade: load the Google Maps iframe only on request ---------- */
+	/* ---------- Map facade: the iframe loads itself just before it scrolls into view; the button remains as a fallback ---------- */
 	$$( '[data-load-map]' ).forEach( function ( b ) {
-		b.addEventListener( 'click', function () {
-			var box = b.closest( '.map-facade' ), f = document.createElement( 'iframe' );
+		var box = b.closest( '.map-facade' ), loaded = false;
+		function loadMap() {
+			if ( loaded ) return;
+			loaded = true;
+			var f = document.createElement( 'iframe' );
 			f.src = box.dataset.mapSrc; f.title = 'Map'; f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
 			box.appendChild( f );
 			b.closest( 'div' ).parentNode.hidden = true;
-		} );
+		}
+		b.addEventListener( 'click', loadMap );
+		if ( 'IntersectionObserver' in window ) {
+			var mio = new IntersectionObserver( function ( en ) {
+				if ( en[ 0 ].isIntersecting ) { mio.disconnect(); loadMap(); }
+			}, { rootMargin: '600px 0px' } );
+			mio.observe( box );
+		} else {
+			loadMap();
+		}
 	} );
 
 	/* Process scrollytelling */
